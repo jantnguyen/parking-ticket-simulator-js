@@ -1,3 +1,6 @@
+const ParkingSpot = require("./parkingSpot");
+const Meter = require("./meter");
+
 module.exports = class Car {
   static list = [];
   static nextAvailableId = 1;
@@ -10,9 +13,18 @@ module.exports = class Car {
 
     // Below are responsibility of a database!
     this.id = Car.nextAvailableId
-    this.parkedAt = Date.now()
     Car.nextAvailableId++
 
     Car.list.push(this)
+  }
+
+  park(minutesPurchased, parkingSpotId) {
+    let parkingSpot = ParkingSpot.getById(parkingSpotId)
+    let meter = Meter.getById(parkingSpot.meterId)
+    meter.purchase(minutesPurchased, parkingSpotId)
+  }
+
+  static getById(id) {
+    return Car.list.filter(car => car.id == id)[0]
   }
 }

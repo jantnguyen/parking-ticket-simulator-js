@@ -12,4 +12,11 @@ router.post('/', (req, res) => {
   res.json(car)
 })
 
+router.post('/:id/park', (req, res) => {
+  let body = req.body
+  let car = Car.getById(req.params.id)
+  car.park(body.minutesPurchased, body.parkingSpotId)
+  res.status(200);
+})
+
 module.exports = router;
