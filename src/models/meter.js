@@ -1,4 +1,5 @@
 const ParkingSpot = require("./parkingSpot");
+const Receipt = require("./receipt");
 
 module.exports = class Meter {
   static list = [];
@@ -14,9 +15,12 @@ module.exports = class Meter {
     Meter.list.push(this)
   }
 
-  purchase(minutes, parkingSpotId) {
+  purchase(minutes, parkingSpotId, car) {
     let parkingSpot = ParkingSpot.getById(parkingSpotId)
-    parkingSpot.purchasedUntil = new Date(Date.now() + minutes*60000);
+    let purchasedUntil = new Date(Date.now() + minutes*60000)
+    parkingSpot.reserve(car, purchasedUntil)
+    let licensePlate = car.licensePlate
+    return new Receipt({purchasedUntil, licensePlate})
   }
 
   static createLot(size, meterId) {

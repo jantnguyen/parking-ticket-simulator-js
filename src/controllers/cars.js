@@ -15,8 +15,8 @@ router.post('/', (req, res) => {
 router.post('/:id/park', (req, res) => {
   let body = req.body
   let car = Car.getById(req.params.id)
-  car.park(body.minutesPurchased, body.parkingSpotId)
-  res.status(200);
+  let receipt = car.park(body.minutesPurchased, body.parkingSpotId)
+  res.json(receipt);
 })
 
 module.exports = router;

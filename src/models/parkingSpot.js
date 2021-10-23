@@ -5,6 +5,7 @@ module.exports = class ParkingSpot {
   constructor(meterId) {
     this.meterId = meterId
     this.purchasedUntil
+    this.car
 
     // Below are responsibility of a database!
     this.id = ParkingSpot.nextAvailableId
@@ -19,5 +20,18 @@ module.exports = class ParkingSpot {
 
   static getByMeterId(meterId) {
     return ParkingSpot.list.filter(parkingSpot => parkingSpot.meterId == meterId)
+  }
+
+  reserve(car, purchasedUntil) {
+    this.purchasedUntil = purchasedUntil
+    this.car = car
+  }
+
+  isOverdue() {
+    return Date.now() > this.purchasedUntil
+  }
+
+  calculateUnpaidTime() {
+    return Date.now() - this.purchasedUntil
   }
 }

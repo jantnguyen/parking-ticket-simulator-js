@@ -1,15 +1,19 @@
-const express = require('express');
-const Meter = require('./meter')
+module.exports = class Receipt {
+  static list = [];
+  static nextAvailableId = 1;
 
-const router = express.Router();
+  constructor(args) {
+    this.purchasedUntil = args.purchasedUntil
+    this.licensePlate = args.licensePlate
 
-router.get('/', (req, res) => {
-  res.json(Meter.list);
-});
+    // Below are responsibility of a database!
+    this.id = Receipt.nextAvailableId
+    Receipt.nextAvailableId++
 
-router.post('/', (req, res) => {
-  let meter = new Meter(req.body)
-  res.json(meter)
-})
+    Receipt.list.push(this)
+  }
 
-module.exports = router;
+  static getById(id) {
+    return Receipt.list.filter(receipt => receipt.id == id)[0]
+  }
+}

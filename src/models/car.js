@@ -1,5 +1,6 @@
 const ParkingSpot = require("./parkingSpot");
 const Meter = require("./meter");
+const Ticket = require("./ticket");
 
 module.exports = class Car {
   static list = [];
@@ -10,6 +11,7 @@ module.exports = class Car {
     this.model = args.model
     this.color = args.color
     this.licensePlate = args.licensePlate
+    this.tickets = []
 
     // Below are responsibility of a database!
     this.id = Car.nextAvailableId
@@ -18,13 +20,18 @@ module.exports = class Car {
     Car.list.push(this)
   }
 
+  static getById(id) {
+    return Car.list.filter(car => car.id == id)[0]
+  }
+
   park(minutesPurchased, parkingSpotId) {
     let parkingSpot = ParkingSpot.getById(parkingSpotId)
     let meter = Meter.getById(parkingSpot.meterId)
-    meter.purchase(minutesPurchased, parkingSpotId)
+    let receipt = meter.purchase(minutesPurchased, parkingSpotId, this)
+    return receipt
   }
 
-  static getById(id) {
-    return Car.list.filter(car => car.id == id)[0]
+  getTickets() {
+    this.tickets = Ticket.getByCar(this.id)
   }
 }
