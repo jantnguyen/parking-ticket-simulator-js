@@ -1,23 +1,45 @@
+const { Sequelize, DataTypes, Model } = require('sequelize');
+const db = require('../config/database')
+
 const ParkingSpot = require("./parkingSpot");
 const Meter = require("./meter");
 const Ticket = require("./ticket");
+const { models } = require('../config/database');
 
-module.exports = class Car {
-  static list = [];
-  static nextAvailableId = 1;
+class DBCar extends Model {}
+DBCar.init({
+  make: {
+    type: Sequelize.STRING
+  },
+  model: {
+    type: Sequelize.STRING
+  },
+  color: {
+    type: Sequelize.STRING
+  },
+  licensePlate: {
+    type: Sequelize.STRING,
+    field: 'license_plate'
+  },
+}, {
+  sequelize: db,
+  timestamps: false,
+  modelName: 'car'
+})
 
+// module.exports = Car;
+
+module.exports = class Car extends DBCar {
   constructor(args) {
+    super()
+    this.id
     this.make = args.make
     this.model = args.model
     this.color = args.color
     this.licensePlate = args.licensePlate
-    this.tickets = []
 
     // Below are responsibility of a database!
-    this.id = Car.nextAvailableId
-    Car.nextAvailableId++
-
-    Car.list.push(this)
+    this.tickets = []
   }
 
   static getById(id) {

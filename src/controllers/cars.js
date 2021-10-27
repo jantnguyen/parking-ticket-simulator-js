@@ -3,13 +3,20 @@ const Car = require('../models/car')
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.json(Car.list);
+router.get('/', async (req, res) => {
+  let cars = await Car.findAll()
+  res.json(cars);
 });
 
-router.post('/', (req, res) => {
-  let car = new Car(req.body)
-  res.json(car)
+router.post('/', async (req, res) => {
+  try {
+    // let car = new Car(req.body)
+    let car = Car.build(req.body);
+    await car.save();
+    res.json(car)
+  } catch (err) {
+    res.sendStatus(500)
+  }
 })
 
 router.post('/:id/park', (req, res) => {

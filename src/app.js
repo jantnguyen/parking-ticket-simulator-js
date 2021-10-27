@@ -10,6 +10,12 @@ const api = require('./controllers');
 
 const app = express();
 
+const db = require('./config/database')
+
+db.authenticate()
+  .then(() => console.log('Connection has been established successfully.'))
+  .catch(() => console.error('Unable to connect to the database:', error))
+
 app.use(morgan('dev'));
 app.use(helmet());
 app.use(cors());
